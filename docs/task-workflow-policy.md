@@ -47,3 +47,16 @@ Keep planning lightweight in Backlog, and require explicit user confirmation bef
 - **Task** = source of truth for priority and state.
 - **Chat** = planning and execution log.
 - Every state change should be explainable in Chat.
+
+## Conversation-driven Operation (default)
+
+- In Chat, the assistant should naturally discuss "what to do next" with the user.
+- In background, board state is continuously maintained to match the conversation.
+- Transition protocol:
+  1. Propose plan in chat
+  2. Get explicit user approval
+  3. Move Backlog -> Todo
+  4. Move Todo -> Doing on actual start
+  5. Move Doing/Review -> Done with evidence
+
+This keeps chat natural for the user while preserving strict execution state on the board.
