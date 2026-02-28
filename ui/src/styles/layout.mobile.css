@@ -391,4 +391,10 @@
   .content--chat .chat-controls .btn {
     min-height: 36px;
   }
+
+  /* Mobile uses position tabs as primary session switcher */
+  .content--chat .chat-controls__session,
+  .content--chat .chat-controls__separator {
+    display: none;
+  }
 }

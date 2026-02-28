@@ -341,12 +341,19 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
 }
+
+.chat-session-tabs::-webkit-scrollbar { display: none; }
 
 .chat-session-tab {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
@@ -539,4 +546,26 @@
 
 .chat-empty-state__body {
   font-size: 13px;
+}
+
+
+.chat-session-tabs-wrap {
+  position: relative;
+}
+
+.chat-session-tabs-wrap::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, var(--card));
+}
+
+@media (max-width: 600px) {
+  .chat-session-tabs {
+    padding-right: 18px;
+  }
 }

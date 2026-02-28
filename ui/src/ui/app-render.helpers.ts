@@ -32,6 +32,26 @@ function resolveSidebarChatSessionKey(state: AppViewState): string {
   return "main";
 }
 
+function isAllowedPositionSession(sessionKey: string): boolean {
+  if (sessionKey === "main") {
+    return true;
+  }
+  return /^agent:(planner|developer|designer|marketer|qa|researcher|ops):main$/i.test(
+    sessionKey.trim(),
+  );
+}
+
+function normalizeChatTabs(state: AppViewState): string[] {
+  const raw = Array.isArray(state.settings.chatTabs)
+    ? state.settings.chatTabs
+    : [state.sessionKey || "main"];
+  const filtered = raw.filter(
+    (key): key is string => typeof key === "string" && isAllowedPositionSession(key),
+  );
+  const deduped = Array.from(new Set(filtered));
+  return deduped.length ? deduped : ["main"];
+}
+
 function resetChatStateForSessionSwitch(state: AppViewState, sessionKey: string) {
   state.sessionKey = sessionKey;
   state.chatMessage = "";
@@ -79,9 +99,7 @@ function sessionLabel(sessionKey: string): string {
 }
 
 export function requestAddPositionTab(state: AppViewState) {
-  const tabs = (
-    Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey]
-  ).filter(Boolean);
+  const tabs = normalizeChatTabs(state);
   const used = new Set(
     tabs.map((key) => positionKeyFromSessionKey(key)).filter(Boolean) as string[],
   );
@@ -128,8 +146,10 @@ function switchChatSession(state: AppViewState, next: string) {
   state.chatRunId = null;
   (state as unknown as OpenClawApp).resetToolStream();
   (state as unknown as OpenClawApp).resetChatScroll();
-  const existingTabs = Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [];
-  const chatTabs = Array.from(new Set([...existingTabs, sessionKey]));
+  const existingTabs = normalizeChatTabs(state);
+  const chatTabs = Array.from(
+    new Set([...existingTabs, sessionKey].filter(isAllowedPositionSession)),
+  );
   state.applySettings({
     ...state.settings,
     sessionKey,
@@ -146,9 +166,7 @@ function switchChatSession(state: AppViewState, next: string) {
 }
 
 function closeChatTab(state: AppViewState, sessionKey: string) {
-  const tabs = (
-    Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey]
-  ).filter(Boolean);
+  const tabs = normalizeChatTabs(state);
   if (tabs.length <= 1) {
     return;
   }
@@ -207,6 +225,15 @@ export function renderTab(state: AppViewState, tab: Tab) {
 }
 
 export function renderChatControls(state: AppViewState) {
+  const normalizedTabs = normalizeChatTabs(state);
+  if (JSON.stringify(normalizedTabs) !== JSON.stringify(state.settings.chatTabs ?? [])) {
+    state.applySettings({
+      ...state.settings,
+      chatTabs: normalizedTabs,
+      sessionKey: isAllowedPositionSession(state.sessionKey) ? state.sessionKey : "main",
+      lastActiveSessionKey: isAllowedPositionSession(state.sessionKey) ? state.sessionKey : "main",
+    });
+  }
   const mainSessionKey = resolveMainSessionKey(state.hello, state.sessionsResult);
   const sessionOptions = resolveSessionOptions(
     state.sessionKey,
@@ -253,11 +280,9 @@ export function renderChatControls(state: AppViewState) {
   `;
   return html`
     <div class="chat-controls">
-      <div class="chat-session-tabs" role="tablist" aria-label="Chat tabs">
-        ${(Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey])
-          .filter((value, index, arr) => value && arr.indexOf(value) === index)
-          .map(
-            (tabKey) => html`
+      <div class="chat-session-tabs-wrap"><div class="chat-session-tabs" role="tablist" aria-label="Chat tabs">
+        ${normalizeChatTabs(state).map(
+          (tabKey) => html`
             <button
               class="chat-session-tab ${tabKey === state.sessionKey ? "active" : ""}"
               type="button"
@@ -277,7 +302,7 @@ export function renderChatControls(state: AppViewState) {
               }
             </button>
           `,
-          )}
+        )}
         <button
           class="btn btn--sm"
           type="button"
@@ -286,7 +311,7 @@ export function renderChatControls(state: AppViewState) {
         >
           + Position
         </button>
-      </div>
+      </div></div>
       <label class="field chat-controls__session">
         <select
           .value=${state.sessionKey}
@@ -491,47 +516,18 @@ export function resolveSessionDisplayName(
 
 function resolveSessionOptions(
   sessionKey: string,
-  sessions: SessionsListResult | null,
-  mainSessionKey?: string | null,
+  _sessions: SessionsListResult | null,
+  _mainSessionKey?: string | null,
 ) {
-  const seen = new Set<string>();
-  const options: Array<{ key: string; displayName?: string }> = [];
+  const normalized = [sessionKey]
+    .filter(isAllowedPositionSession)
+    .concat(["main"])
+    .filter((value, index, arr) => arr.indexOf(value) === index);
 
-  const resolvedMain = mainSessionKey && sessions?.sessions?.find((s) => s.key === mainSessionKey);
-  const resolvedCurrent = sessions?.sessions?.find((s) => s.key === sessionKey);
-
-  // Add main session key first
-  if (mainSessionKey) {
-    seen.add(mainSessionKey);
-    options.push({
-      key: mainSessionKey,
-      displayName: resolveSessionDisplayName(mainSessionKey, resolvedMain || undefined),
-    });
-  }
-
-  // Add current session key next
-  if (!seen.has(sessionKey)) {
-    seen.add(sessionKey);
-    options.push({
-      key: sessionKey,
-      displayName: resolveSessionDisplayName(sessionKey, resolvedCurrent),
-    });
-  }
-
-  // Add sessions from the result
-  if (sessions?.sessions) {
-    for (const s of sessions.sessions) {
-      if (!seen.has(s.key)) {
-        seen.add(s.key);
-        options.push({
-          key: s.key,
-          displayName: resolveSessionDisplayName(s.key, s),
-        });
-      }
-    }
-  }
-
-  return options;
+  return normalized.map((key) => ({
+    key,
+    displayName: sessionLabel(key),
+  }));
 }
 
 const THEME_ORDER: ThemeMode[] = ["system", "light", "dark"];

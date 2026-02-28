@@ -280,7 +280,7 @@ export function renderChat(props: ChatProps) {
               <div class="chat-empty-state">
                 <div class="chat-empty-state__title">Start your first message</div>
                 <div class="chat-empty-state__body">
-                  No conversation yet in this tab. Type a message below or create a new session.
+                  No conversation yet in this tab. Type a message below or create a new position.
                 </div>
               </div>
             `
