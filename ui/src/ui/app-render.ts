@@ -232,8 +232,8 @@ export function renderApp(state: AppViewState) {
             <span class="nav-collapse-toggle__icon">${icons.menu}</span>
           </button>
           <div class="brand">
-            <div class="brand-logo">
-              <img src=${basePath ? `${basePath}/favicon.svg` : "/favicon.svg"} alt="OpenClaw" />
+            <div class="brand-logo" aria-hidden="true">
+              <div class="brand-mark">M</div>
             </div>
             <div class="brand-text">
               <div class="brand-title">MAKETEAM</div>
