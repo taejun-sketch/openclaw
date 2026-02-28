@@ -33,16 +33,16 @@
   --border-strong: #3f3f46;
   --border-hover: #52525b;
   --input: #27272a;
-  --ring: #555555;
+  --ring: #FF5500;
 
   /* Accent - Punchy signature red */
-  --accent: #111111;
-  --accent-hover: #1a1a1a;
-  --accent-muted: #1f1f1f;
-  --accent-subtle: rgba(255, 255, 255, 0.12);
+  --accent: #FF5500;
+  --accent-hover: #FF6A1F;
+  --accent-muted: #FF5500;
+  --accent-subtle: rgba(255, 85, 0, 0.15);
   --accent-foreground: #fafafa;
-  --accent-glow: rgba(255, 255, 255, 0.12);
-  --primary: #111111;
+  --accent-glow: rgba(255, 85, 0, 0.22);
+  --primary: #FF5500;
   --primary-foreground: #ffffff;
 
   /* Secondary - Teal accent for variety */
@@ -143,13 +143,13 @@
   --border-hover: #a1a1aa;
   --input: #e4e4e7;
 
-  --accent: #111111;
-  --accent-hover: #222222;
-  --accent-muted: #222222;
-  --accent-subtle: rgba(17, 17, 17, 0.10);
+  --accent: #FF5500;
+  --accent-hover: #FF6A1F;
+  --accent-muted: #FF5500;
+  --accent-subtle: rgba(255, 85, 0, 0.12);
   --accent-foreground: #ffffff;
-  --accent-glow: rgba(17, 17, 17, 0.10);
-  --primary: #111111;
+  --accent-glow: rgba(255, 85, 0, 0.15);
+  --primary: #FF5500;
   --primary-foreground: #ffffff;
 
   --secondary: #f4f4f5;
