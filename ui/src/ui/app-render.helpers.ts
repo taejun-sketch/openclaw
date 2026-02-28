@@ -98,12 +98,29 @@ function sessionLabel(sessionKey: string): string {
   return found ? found.label : positionKey;
 }
 
-export function requestAddPositionTab(state: AppViewState) {
+function availablePositions(state: AppViewState) {
   const tabs = normalizeChatTabs(state);
   const used = new Set(
     tabs.map((key) => positionKeyFromSessionKey(key)).filter(Boolean) as string[],
   );
-  const available = POSITION_OPTIONS.filter((p) => !used.has(p.key));
+  return POSITION_OPTIONS.filter((p) => !used.has(p.key));
+}
+
+function addPositionTabByKey(state: AppViewState, positionKey: string) {
+  const selected = POSITION_OPTIONS.find((p) => p.key === positionKey);
+  if (!selected) {
+    return false;
+  }
+  const available = availablePositions(state);
+  if (!available.find((p) => p.key === selected.key)) {
+    return false;
+  }
+  switchChatSession(state, sessionKeyForPosition(selected.key));
+  return true;
+}
+
+export function requestAddPositionTab(state: AppViewState) {
+  const available = availablePositions(state);
   if (available.length === 0) {
     window.alert("All position tabs are already in use.");
     return;
@@ -131,7 +148,7 @@ export function requestAddPositionTab(state: AppViewState) {
     window.alert("Invalid position selection.");
     return;
   }
-  switchChatSession(state, sessionKeyForPosition(selectedKey));
+  addPositionTabByKey(state, selectedKey);
 }
 
 function switchChatSession(state: AppViewState, next: string) {
