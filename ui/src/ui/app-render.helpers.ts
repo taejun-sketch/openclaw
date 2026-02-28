@@ -47,6 +47,75 @@ function resetChatStateForSessionSwitch(state: AppViewState, sessionKey: string)
   });
 }
 
+const POSITION_OPTIONS = [
+  { key: "planner", label: "Planner" },
+  { key: "developer", label: "Developer" },
+  { key: "designer", label: "Designer" },
+  { key: "marketer", label: "Marketer" },
+  { key: "qa", label: "QA" },
+  { key: "researcher", label: "Researcher" },
+  { key: "ops", label: "Ops" },
+] as const;
+
+function sessionKeyForPosition(positionKey: string): string {
+  return `agent:${positionKey}:main`;
+}
+
+function positionKeyFromSessionKey(sessionKey: string): string | null {
+  const m = /^agent:([a-z0-9-]+):main$/i.exec(sessionKey.trim());
+  return m?.[1] ?? null;
+}
+
+function sessionLabel(sessionKey: string): string {
+  if (sessionKey === "main") {
+    return "Main";
+  }
+  const positionKey = positionKeyFromSessionKey(sessionKey);
+  if (!positionKey) {
+    return sessionKey;
+  }
+  const found = POSITION_OPTIONS.find((p) => p.key === positionKey);
+  return found ? found.label : positionKey;
+}
+
+function addPositionTab(state: AppViewState) {
+  const tabs = (
+    Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey]
+  ).filter(Boolean);
+  const used = new Set(
+    tabs.map((key) => positionKeyFromSessionKey(key)).filter(Boolean) as string[],
+  );
+  const available = POSITION_OPTIONS.filter((p) => !used.has(p.key));
+  if (available.length === 0) {
+    window.alert("All position tabs are already in use.");
+    return;
+  }
+  let selectedKey: string | null = null;
+  if (available.length === 1) {
+    selectedKey = available[0].key;
+  } else {
+    const optionsText = available.map((p, i) => `${i + 1}. ${p.label}`).join("\n");
+    const raw = window.prompt(`Choose a position to add:\n${optionsText}`, "1")?.trim();
+    if (!raw) {
+      return;
+    }
+    const byIndex = Number(raw);
+    if (!Number.isNaN(byIndex) && byIndex >= 1 && byIndex <= available.length) {
+      selectedKey = available[byIndex - 1].key;
+    } else {
+      const found = available.find(
+        (p) => p.key === raw.toLowerCase() || p.label.toLowerCase() === raw.toLowerCase(),
+      );
+      selectedKey = found?.key ?? null;
+    }
+  }
+  if (!selectedKey) {
+    window.alert("Invalid position selection.");
+    return;
+  }
+  switchChatSession(state, sessionKeyForPosition(selectedKey));
+}
+
 function switchChatSession(state: AppViewState, next: string) {
   const sessionKey = next.trim();
   if (!sessionKey) {
@@ -194,10 +263,10 @@ export function renderChatControls(state: AppViewState) {
               type="button"
               role="tab"
               aria-selected=${tabKey === state.sessionKey}
-              title=${tabKey}
+              title=${sessionLabel(tabKey)}
               @click=${() => switchChatSession(state, tabKey)}
             >
-              <span class="chat-session-tab__label">${tabKey}</span>
+              <span class="chat-session-tab__label">${sessionLabel(tabKey)}</span>
               ${
                 tabKey !== "main"
                   ? html`<span class="chat-session-tab__close" @click=${(event: MouseEvent) => {
@@ -213,16 +282,9 @@ export function renderChatControls(state: AppViewState) {
           class="btn btn--sm"
           type="button"
           title="Add chat tab"
-          @click=${() => {
-            const seed = state.sessionKey || "main";
-            const next = window.prompt("New session key", seed)?.trim();
-            if (!next) {
-              return;
-            }
-            switchChatSession(state, next);
-          }}
+          @click=${() => addPositionTab(state)}
         >
-          + Tab
+          + Position
         </button>
       </div>
       <label class="field chat-controls__session">
