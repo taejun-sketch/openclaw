@@ -402,13 +402,28 @@ export function renderApp(state: AppViewState) {
 
         ${
           state.tab === "teamboard"
-            ? html`<div class="callout">
+            ? html`<div class="callout home-card home-card--spaced">
                 <strong>Task</strong>
-                <div class="home-card__body">Open Agent Board for DAG task orchestration.</div>
+                <div class="home-card__body">Embedded task board (Agent Board) for DAG orchestration.</div>
                 <div class="home-quick-links home-quick-links--inline">
-                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Task</a>
+                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open in new tab</a>
                   <span class="mono">http://127.0.0.1:3456</span>
                 </div>
+              </div>
+              <div class="home-quick-links home-quick-links--inline task-position-links">
+                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Planning" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Planner → Planning</a>
+                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Development" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Developer → Development</a>
+                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Design" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Designer → Design</a>
+                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Marketing" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Marketer → Marketing</a>
+              </div>
+              <div class="task-embed-wrap surface-card">
+                <iframe
+                  class="task-embed-frame"
+                  title="MakeTeam Task Board"
+                  src="http://127.0.0.1:3456"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                ></iframe>
               </div>`
             : nothing
         }
