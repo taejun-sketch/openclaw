@@ -1,24 +1,24 @@
 :root {
   /* Background - Warmer dark with depth */
-  --bg: #12141a;
-  --bg-accent: #14161d;
-  --bg-elevated: #1a1d25;
-  --bg-hover: #262a35;
-  --bg-muted: #262a35;
+  --bg: #000000;
+  --bg-accent: #050505;
+  --bg-elevated: #0a0a0a;
+  --bg-hover: #121212;
+  --bg-muted: #121212;
 
   /* Card / Surface - More contrast between levels */
-  --card: #181b22;
+  --card: #0b0b0b;
   --card-foreground: #f4f4f5;
   --card-highlight: rgba(255, 255, 255, 0.05);
   --popover: #181b22;
   --popover-foreground: #f4f4f5;
 
   /* Panel */
-  --panel: #12141a;
-  --panel-strong: #1a1d25;
-  --panel-hover: #262a35;
-  --chrome: rgba(18, 20, 26, 0.95);
-  --chrome-strong: rgba(18, 20, 26, 0.98);
+  --panel: #000000;
+  --panel-strong: #0a0a0a;
+  --panel-hover: #141414;
+  --chrome: rgba(0, 0, 0, 0.95);
+  --chrome-strong: rgba(0, 0, 0, 0.98);
 
   /* Text - Slightly warmer */
   --text: #e4e4e7;
