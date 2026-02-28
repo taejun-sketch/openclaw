@@ -81,6 +81,26 @@ export const icons = {
       <path d="M15 12h-5" />
     </svg>
   `,
+
+  users: html`
+    <svg viewBox="0 0 24 24">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="3" />
+      <path d="M20 8v6" />
+      <path d="M23 11h-6" />
+    </svg>
+  `,
+  workflow: html`
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="6" height="6" rx="1" />
+      <rect x="15" y="3" width="6" height="6" rx="1" />
+      <rect x="15" y="15" width="6" height="6" rx="1" />
+      <path d="M9 6h6" />
+      <path d="M18 9v6" />
+      <path d="M15 18H9" />
+      <path d="M9 18l-2-2" />
+    </svg>
+  `,
   folder: html`
     <svg viewBox="0 0 24 24">
       <path

@@ -70,6 +70,7 @@
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--panel);
+  box-shadow: var(--shadow-sm);
   color: var(--muted);
   font-size: 20px;
   line-height: 1;
@@ -358,7 +359,7 @@
 
 .chat-session-tab.active {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-subtle);
+  box-shadow: 0 0 0 1px var(--accent-subtle), var(--shadow-sm);
 }
 
 .chat-session-tab__label {
@@ -445,7 +446,7 @@
   border-color: var(--accent);
   background: var(--accent-subtle);
   color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-subtle);
+  box-shadow: 0 0 0 1px var(--accent-subtle), var(--shadow-sm);
 }
 
 .btn--icon svg {

@@ -146,9 +146,9 @@ export function iconForTab(tab: Tab): IconName {
     case "runs":
       return "play";
     case "agents":
-      return "folder";
+      return "users";
     case "automations":
-      return "loader";
+      return "workflow";
     case "channels":
       return "link";
     case "skills":

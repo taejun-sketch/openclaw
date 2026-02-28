@@ -314,13 +314,27 @@ export function renderApp(state: AppViewState) {
                 <strong>Today Goals</strong>
                 <div class="home-card__body">1) Move top priority backlog items to To Do • 2) Run one automation • 3) Review usage.</div>
                 <div class="home-card__meta mono">
-                  Active session: ${state.sessionKey || "main"} · Connected: ${state.connected ? "yes" : "no"}
+                  Active session: ${state.sessionKey || "main"} · <span class="state-badge ${state.connected ? "state-badge--ok" : "state-badge--danger"}">${state.connected ? "connected" : "offline"}</span>
                 </div>
               </div>
               <div class="home-grid">
                 <div class="callout home-card"><strong>In Progress</strong><div class="home-card__body mono">${sessionsCount ?? 0} sessions · chat queue ${state.chatQueue.length}</div></div>
-                <div class="callout home-card"><strong>Blocked</strong><div class="home-card__body mono">${state.lastError ? state.lastError : "No critical blocker detected"}</div></div>
-                <div class="callout home-card"><strong>Automations</strong><div class="home-card__body mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
+                <div class="callout home-card"><strong>Blocked</strong><div class="home-card__body mono">${
+                  state.lastError
+                    ? html`<span class="state-badge state-badge--danger">error</span> ${state.lastError}`
+                    : html`
+                        <span class="state-badge state-badge--ok">clear</span> No critical blocker detected
+                      `
+                }</div></div>
+                <div class="callout home-card"><strong>Automations</strong><div class="home-card__body mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"} ${
+                  state.cronJobs.length
+                    ? html`
+                        <span class="state-badge state-badge--ok">active</span>
+                      `
+                    : html`
+                        <span class="state-badge state-badge--muted">idle</span>
+                      `
+                }</div></div>
                 <div class="callout home-card"><strong>Usage Snapshot</strong><div class="home-card__body mono">Range ${state.usageStartDate} → ${state.usageEndDate} · mode ${state.usageChartMode}</div></div>
               </div>
               <div class="home-grid">
