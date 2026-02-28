@@ -313,12 +313,21 @@ export function renderApp(state: AppViewState) {
             ? html`<div class="callout" style="margin-bottom:12px;">
                 <strong>Today Goals</strong>
                 <div style="margin-top:8px">1) Move top priority backlog items to To Do • 2) Run one automation • 3) Review usage.</div>
+                <div style="margin-top:10px" class="mono">
+                  Active session: ${state.sessionKey || "main"} · Connected: ${state.connected ? "yes" : "no"}
+                </div>
               </div>
               <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
-                <div class="callout"><strong>In Progress</strong><div style="margin-top:8px" class="mono">${sessionsCount ?? "n/a"} active/known runs</div></div>
-                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">Check Task dependencies</div></div>
+                <div class="callout"><strong>In Progress</strong><div style="margin-top:8px" class="mono">${sessionsCount ?? 0} sessions · chat queue ${state.chatQueue.length}</div></div>
+                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">${state.lastError ? state.lastError : "No critical blocker detected"}</div></div>
                 <div class="callout"><strong>Automations</strong><div style="margin-top:8px" class="mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
-                <div class="callout"><strong>Usage Snapshot</strong><div style="margin-top:8px" class="mono">Open Usage tab for token/cost trend</div></div>
+                <div class="callout"><strong>Usage Snapshot</strong><div style="margin-top:8px" class="mono">Range ${state.usageStartDate} → ${state.usageEndDate} · mode ${state.usageChartMode}</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
+                <div class="callout"><strong>Channels</strong><div style="margin-top:8px" class="mono">${state.channelsSnapshot ? Object.keys(state.channelsSnapshot.channels || {}).length : 0} configured</div></div>
+                <div class="callout"><strong>Agents</strong><div style="margin-top:8px" class="mono">${state.agentsList?.agents?.length ?? 0} available</div></div>
+                <div class="callout"><strong>Theme</strong><div style="margin-top:8px" class="mono">${state.theme} (${state.themeResolved})</div></div>
+                <div class="callout"><strong>Last Channels Refresh</strong><div style="margin-top:8px" class="mono">${state.channelsLastSuccess ? new Date(state.channelsLastSuccess).toLocaleString() : "n/a"}</div></div>
               </div>
               <div class="callout">
                 <strong>Quick Links</strong>
@@ -327,6 +336,7 @@ export function renderApp(state: AppViewState) {
                   <a class="btn" href="${basePath || ""}/runs">Runs</a>
                   <a class="btn" href="${basePath || ""}/automations">Automations</a>
                   <a class="btn" href="${basePath || ""}/usage">Usage</a>
+                  <a class="btn" href="${basePath || ""}/channels">Channels</a>
                 </div>
               </div>`
             : nothing
