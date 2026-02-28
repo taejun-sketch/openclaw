@@ -340,7 +340,7 @@ export function renderApp(state: AppViewState) {
               <div class="callout">
                 <strong>Quick Links</strong>
                 <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
-                  <a class="btn" href="${basePath || ""}/teamboard">Team Board</a>
+                  <a class="btn" href="${basePath || ""}/teamboard">Task</a>
                   <a class="btn" href="${basePath || ""}/runs">Runs</a>
                   <a class="btn" href="${basePath || ""}/automations">Automations</a>
                   <a class="btn" href="${basePath || ""}/usage">Usage</a>
@@ -385,10 +385,10 @@ export function renderApp(state: AppViewState) {
         ${
           state.tab === "teamboard"
             ? html`<div class="callout">
-                <strong>Task Board</strong>
+                <strong>Task</strong>
                 <div style="margin-top:8px">Open Agent Board for DAG task orchestration.</div>
                 <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Task Board</a>
+                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Task</a>
                   <span class="mono">http://127.0.0.1:3456</span>
                 </div>
               </div>`

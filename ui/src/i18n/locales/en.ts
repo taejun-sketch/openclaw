@@ -27,7 +27,7 @@ export const en: TranslationMap = {
   },
   tabs: {
     home: "Home",
-    teamboard: "Task Board",
+    teamboard: "Task",
     runs: "Runs",
     automations: "Automations",
     agents: "Agents",
