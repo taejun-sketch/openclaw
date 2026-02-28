@@ -385,10 +385,10 @@ export function renderApp(state: AppViewState) {
         ${
           state.tab === "teamboard"
             ? html`<div class="callout">
-                <strong>Team Board</strong>
+                <strong>Task Board</strong>
                 <div style="margin-top:8px">Open Agent Board for DAG task orchestration.</div>
                 <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Agent Board</a>
+                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Task Board</a>
                   <span class="mono">http://127.0.0.1:3456</span>
                 </div>
               </div>`

@@ -27,7 +27,7 @@ export const en: TranslationMap = {
   },
   tabs: {
     home: "Home",
-    teamboard: "Team Board",
+    teamboard: "Task Board",
     runs: "Runs",
     automations: "Automations",
     agents: "Agents",
@@ -46,7 +46,7 @@ export const en: TranslationMap = {
   },
   subtitles: {
     home: "Today's mission control: goals, progress, blockers, and usage.",
-    teamboard: "Plan and track work across your AI agent team.",
+    teamboard: "Plan and track tasks across your AI agent team.",
     runs: "Track active and recent execution runs.",
     automations: "Manage recurring workflows and schedules.",
     agents: "Manage agent workspaces, tools, and identities.",
