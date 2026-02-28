@@ -282,23 +282,6 @@ export function renderApp(state: AppViewState) {
             </div>
           `;
         })}
-        <div class="nav-group nav-group--links">
-          <div class="nav-label nav-label--static">
-            <span class="nav-label__text">${t("common.resources")}</span>
-          </div>
-          <div class="nav-group__items">
-            <a
-              class="nav-item nav-item--external"
-              href="https://docs.openclaw.ai"
-              target=${EXTERNAL_LINK_TARGET}
-              rel=${buildExternalLinkRel()}
-              title="${t("common.docs")} (opens in new tab)"
-            >
-              <span class="nav-item__icon" aria-hidden="true">${icons.book}</span>
-              <span class="nav-item__text">${t("common.docs")}</span>
-            </a>
-          </div>
-        </div>
       </aside>
       <main class="content ${isChat ? "content--chat" : ""}">
         ${
@@ -333,7 +316,7 @@ export function renderApp(state: AppViewState) {
               </div>
               <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
                 <div class="callout"><strong>In Progress</strong><div style="margin-top:8px" class="mono">${sessionsCount ?? "n/a"} active/known runs</div></div>
-                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">Check Team Board dependencies</div></div>
+                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">Check Task dependencies</div></div>
                 <div class="callout"><strong>Automations</strong><div style="margin-top:8px" class="mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
                 <div class="callout"><strong>Usage Snapshot</strong><div style="margin-top:8px" class="mono">Open Usage tab for token/cost trend</div></div>
               </div>

@@ -21,6 +21,7 @@ export const en: TranslationMap = {
     settings: "Settings",
     maketeam: "MakeTeam",
     admin: "Admin",
+    operations: "Operations",
     legacy: "Legacy",
     expand: "Expand sidebar",
     collapse: "Collapse sidebar",

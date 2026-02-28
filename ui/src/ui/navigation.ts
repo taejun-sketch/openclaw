@@ -4,17 +4,11 @@ import type { IconName } from "./icons.js";
 export const TAB_GROUPS = [
   {
     label: "maketeam",
-    tabs: [
-      "home",
-      "teamboard",
-      "chat",
-      "runs",
-      "agents",
-      "automations",
-      "channels",
-      "skills",
-      "usage",
-    ],
+    tabs: ["home", "teamboard", "chat", "runs", "agents"],
+  },
+  {
+    label: "operations",
+    tabs: ["automations", "channels", "skills", "usage"],
   },
   { label: "admin", tabs: ["config", "debug", "logs"] },
 ] as const;
