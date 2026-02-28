@@ -5,6 +5,26 @@ import { html, type TemplateResult } from "lit";
 
 export const icons = {
   // Navigation icons
+
+  home: html`
+    <svg viewBox="0 0 24 24">
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9.8V21h14V9.8" />
+    </svg>
+  `,
+  grid: html`
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="8" height="8" rx="1" />
+      <rect x="13" y="3" width="8" height="8" rx="1" />
+      <rect x="3" y="13" width="8" height="8" rx="1" />
+      <rect x="13" y="13" width="8" height="8" rx="1" />
+    </svg>
+  `,
+  play: html`
+    <svg viewBox="0 0 24 24">
+      <polygon points="6 4 20 12 6 20 6 4" />
+    </svg>
+  `,
   messageSquare: html`
     <svg viewBox="0 0 24 24">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />

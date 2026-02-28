@@ -241,6 +241,7 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
   cursor: pointer;
   transition:
     background var(--duration-fast) ease,
@@ -428,7 +429,7 @@
 }
 
 .content > * + * {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 :root[data-theme="light"] .content {
@@ -452,8 +453,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
-  padding: 4px 8px;
+  gap: 14px;
+  padding: 2px 4px 8px;
   overflow: hidden;
   transform-origin: top center;
   transition:
@@ -461,7 +462,7 @@
     transform var(--shell-focus-duration) var(--shell-focus-ease),
     max-height var(--shell-focus-duration) var(--shell-focus-ease),
     padding var(--shell-focus-duration) var(--shell-focus-ease);
-  max-height: 80px;
+  max-height: 96px;
 }
 
 .shell--chat-focus .content-header {
@@ -473,7 +474,7 @@
 }
 
 .page-title {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.15;
@@ -484,7 +485,7 @@
   color: var(--muted);
   font-size: 14px;
   font-weight: 400;
-  margin-top: 6px;
+  margin-top: 4px;
   letter-spacing: -0.01em;
 }
 
