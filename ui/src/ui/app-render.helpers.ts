@@ -78,7 +78,7 @@ function sessionLabel(sessionKey: string): string {
   return found ? found.label : positionKey;
 }
 
-function addPositionTab(state: AppViewState) {
+export function requestAddPositionTab(state: AppViewState) {
   const tabs = (
     Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey]
   ).filter(Boolean);
@@ -282,7 +282,7 @@ export function renderChatControls(state: AppViewState) {
           class="btn btn--sm"
           type="button"
           title="Add chat tab"
-          @click=${() => addPositionTab(state)}
+          @click=${() => requestAddPositionTab(state)}
         >
           + Position
         </button>

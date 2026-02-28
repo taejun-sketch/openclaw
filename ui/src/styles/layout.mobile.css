@@ -127,6 +127,13 @@
     display: none;
   }
 
+  .content--chat .content-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
   .content {
     padding: 4px 4px 16px;
     gap: 12px;
@@ -370,5 +377,18 @@
   .theme-icon {
     width: 11px;
     height: 11px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .content--chat .chat-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .content--chat .chat-controls .btn {
+    min-height: 36px;
   }
 }
