@@ -326,7 +326,31 @@ export function renderApp(state: AppViewState) {
         </section>
 
         ${
-          state.tab === "overview" || state.tab === "home"
+          state.tab === "home"
+            ? html`<div class="callout" style="margin-bottom:12px;">
+                <strong>Today Goals</strong>
+                <div style="margin-top:8px">1) Move top priority backlog items to To Do • 2) Run one automation • 3) Review usage.</div>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
+                <div class="callout"><strong>In Progress</strong><div style="margin-top:8px" class="mono">${sessionsCount ?? "n/a"} active/known runs</div></div>
+                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">Check Team Board dependencies</div></div>
+                <div class="callout"><strong>Automations</strong><div style="margin-top:8px" class="mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
+                <div class="callout"><strong>Usage Snapshot</strong><div style="margin-top:8px" class="mono">Open Usage tab for token/cost trend</div></div>
+              </div>
+              <div class="callout">
+                <strong>Quick Links</strong>
+                <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                  <a class="btn" href="${basePath || ""}/teamboard">Team Board</a>
+                  <a class="btn" href="${basePath || ""}/runs">Runs</a>
+                  <a class="btn" href="${basePath || ""}/automations">Automations</a>
+                  <a class="btn" href="${basePath || ""}/usage">Usage</a>
+                </div>
+              </div>`
+            : nothing
+        }
+
+        ${
+          state.tab === "overview"
             ? renderOverview({
                 connected: state.connected,
                 hello: state.hello,

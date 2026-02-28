@@ -17,8 +17,6 @@ export const TAB_GROUPS = [
     ],
   },
   { label: "admin", tabs: ["config", "debug", "logs"] },
-  // Legacy tabs kept for compatibility
-  { label: "legacy", tabs: ["overview", "instances", "sessions", "cron", "nodes"] },
 ] as const;
 
 export type Tab =
