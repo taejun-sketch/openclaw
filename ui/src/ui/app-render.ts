@@ -136,6 +136,35 @@ function resolveAssistantAvatarUrl(state: AppViewState): string | undefined {
   return identity?.avatarUrl;
 }
 
+function positionFromSessionKey(
+  sessionKey: string,
+): "planner" | "developer" | "designer" | "marketer" {
+  const key = String(sessionKey || "").toLowerCase();
+  if (key.includes("developer") || key.includes("dev")) {
+    return "developer";
+  }
+  if (key.includes("designer")) {
+    return "designer";
+  }
+  if (key.includes("marketer")) {
+    return "marketer";
+  }
+  return "planner";
+}
+
+function assigneeFromPosition(position: "planner" | "developer" | "designer" | "marketer"): string {
+  if (position === "developer") {
+    return "coding-agent";
+  }
+  if (position === "designer") {
+    return "design-agent";
+  }
+  if (position === "marketer") {
+    return "growth-agent";
+  }
+  return "planner-agent";
+}
+
 export function renderApp(state: AppViewState) {
   const openClawVersion =
     (typeof state.hello?.server?.version === "string" && state.hello.server.version.trim()) ||
@@ -402,29 +431,30 @@ export function renderApp(state: AppViewState) {
 
         ${
           state.tab === "teamboard"
-            ? html`<div class="callout home-card home-card--spaced">
-                <strong>Task</strong>
-                <div class="home-card__body">Embedded task board (Agent Board) for DAG orchestration.</div>
-                <div class="home-quick-links home-quick-links--inline">
-                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open in new tab</a>
-                  <span class="mono">http://127.0.0.1:3456</span>
-                </div>
-              </div>
-              <div class="home-quick-links home-quick-links--inline task-position-links">
-                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Planning" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Planner → Planning</a>
-                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Development" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Developer → Development</a>
-                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Design" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Designer → Design</a>
-                <a class="btn btn--sm" href="http://127.0.0.1:3456/?project=Marketing" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Marketer → Marketing</a>
-              </div>
-              <div class="task-embed-wrap surface-card">
-                <iframe
-                  class="task-embed-frame"
-                  title="MakeTeam Task Board"
-                  src="http://127.0.0.1:3456"
-                  loading="lazy"
-                  referrerpolicy="no-referrer"
-                ></iframe>
-              </div>`
+            ? (() => {
+                const activePosition = positionFromSessionKey(state.sessionKey || "main");
+                const activeAssignee = assigneeFromPosition(activePosition);
+                const boardBase = "http://127.0.0.1:3456";
+                const boardUrl = `${boardBase}/?embed=1&agent=${encodeURIComponent(activeAssignee)}`;
+                return html`<div class="callout home-card home-card--spaced">
+                    <strong>Task</strong>
+                    <div class="home-card__body">Embedded task board (Agent Board) for DAG orchestration.</div>
+                    <div class="home-card__meta mono">Synced position: ${activePosition[0].toUpperCase() + activePosition.slice(1)}</div>
+                    <div class="home-quick-links home-quick-links--inline">
+                      <a class="btn" href="${boardBase}" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open in new tab</a>
+                      <span class="mono">${boardBase}</span>
+                    </div>
+                  </div>
+                  <div class="task-embed-wrap surface-card">
+                    <iframe
+                      class="task-embed-frame"
+                      title="MakeTeam Task Board"
+                      src="${boardUrl}"
+                      loading="lazy"
+                      referrerpolicy="no-referrer"
+                    ></iframe>
+                  </div>`;
+              })()
             : nothing
         }
 

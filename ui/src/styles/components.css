@@ -2758,3 +2758,8 @@
 
 .task-position-links { margin-bottom: 10px; }
 .task-position-links .btn { white-space: nowrap; }
+
+.task-position-links .btn.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-subtle);
+}
