@@ -236,8 +236,8 @@ export function renderApp(state: AppViewState) {
               <img src=${basePath ? `${basePath}/favicon.svg` : "/favicon.svg"} alt="OpenClaw" />
             </div>
             <div class="brand-text">
-              <div class="brand-title">OPENCLAW</div>
-              <div class="brand-sub">Gateway Dashboard</div>
+              <div class="brand-title">MAKETEAM</div>
+              <div class="brand-sub">AI Agents Team OS</div>
             </div>
           </div>
         </div>
@@ -326,7 +326,7 @@ export function renderApp(state: AppViewState) {
         </section>
 
         ${
-          state.tab === "overview"
+          state.tab === "overview" || state.tab === "home"
             ? renderOverview({
                 connected: state.connected,
                 hello: state.hello,
@@ -355,6 +355,19 @@ export function renderApp(state: AppViewState) {
                 onConnect: () => state.connect(),
                 onRefresh: () => state.loadOverview(),
               })
+            : nothing
+        }
+
+        ${
+          state.tab === "teamboard"
+            ? html`<div class="callout">
+                <strong>Team Board</strong>
+                <div style="margin-top:8px">Open Agent Board for DAG task orchestration.</div>
+                <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Agent Board</a>
+                  <span class="mono">http://127.0.0.1:3456</span>
+                </div>
+              </div>`
             : nothing
         }
 
@@ -410,7 +423,7 @@ export function renderApp(state: AppViewState) {
         }
 
         ${
-          state.tab === "sessions"
+          state.tab === "sessions" || state.tab === "runs"
             ? renderSessions({
                 loading: state.sessionsLoading,
                 result: state.sessionsResult,
@@ -436,7 +449,7 @@ export function renderApp(state: AppViewState) {
         ${renderUsageTab(state)}
 
         ${
-          state.tab === "cron"
+          state.tab === "cron" || state.tab === "automations"
             ? renderCron({
                 basePath: state.basePath,
                 loading: state.cronLoading,
