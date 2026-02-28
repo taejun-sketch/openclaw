@@ -2702,3 +2702,34 @@
     justify-content: center;
   }
 }
+
+
+.sessions-mobile-list { display: none; }
+
+.sessions-mobile-card {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.sessions-mobile-card + .sessions-mobile-card { margin-top: 8px; }
+
+.sessions-mobile-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.sessions-mobile-card__meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .sessions-mobile-list { display: block; }
+  .sessions-table { display: none; }
+}

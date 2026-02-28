@@ -258,6 +258,7 @@ export function renderChat(props: ChatProps) {
 
   const splitRatio = props.splitRatio ?? 0.6;
   const sidebarOpen = Boolean(props.sidebarOpen && props.onCloseSidebar);
+  const chatItems = buildChatItems(props);
   const thread = html`
     <div
       class="chat-thread"
@@ -272,8 +273,20 @@ export function renderChat(props: ChatProps) {
             `
           : nothing
       }
+      ${
+        !props.loading && chatItems.length === 0
+          ? html`
+              <div class="chat-empty-state">
+                <div class="chat-empty-state__title">Start your first message</div>
+                <div class="chat-empty-state__body">
+                  No conversation yet in this tab. Type a message below or create a new session.
+                </div>
+              </div>
+            `
+          : nothing
+      }
       ${repeat(
-        buildChatItems(props),
+        chatItems,
         (item) => item.key,
         (item) => {
           if (item.kind === "divider") {

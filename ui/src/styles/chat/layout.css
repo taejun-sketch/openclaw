@@ -521,3 +521,22 @@
     min-width: 120px;
   }
 }
+
+
+.chat-empty-state {
+  border: 1px dashed var(--border);
+  background: var(--panel-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  color: var(--muted);
+}
+
+.chat-empty-state__title {
+  color: var(--text-strong);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.chat-empty-state__body {
+  font-size: 13px;
+}

@@ -109,6 +109,17 @@ function resolveThinkLevelPatchValue(value: string, isBinary: boolean): string |
 
 export function renderSessions(props: SessionsProps) {
   const rows = props.result?.sessions ?? [];
+  const mobileCards = rows.map((row) => {
+    const updated = row.updatedAt ? formatRelativeTimestamp(row.updatedAt) : "n/a";
+    return html`<div class="sessions-mobile-card">
+      <div class="sessions-mobile-card__head">
+        <div class="mono">${row.key}</div>
+        <a class="btn btn--sm" href="${pathForTab("chat", props.basePath)}?session=${encodeURIComponent(row.key)}">Open</a>
+      </div>
+      <div class="sessions-mobile-card__meta">${row.kind} · ${updated}</div>
+      <div class="sessions-mobile-card__meta">tokens ${formatSessionTokens(row.tokensPrompt, row.tokensCompletion)}</div>
+    </div>`;
+  });
   return html`
     <section class="card">
       <div class="row" style="justify-content: space-between;">
@@ -188,7 +199,17 @@ export function renderSessions(props: SessionsProps) {
         ${props.result ? `Store: ${props.result.path}` : ""}
       </div>
 
-      <div class="table" style="margin-top: 16px;">
+      <div class="sessions-mobile-list" style="margin-top: 12px;">
+        ${
+          rows.length === 0
+            ? html`
+                <div class="muted">No sessions found.</div>
+              `
+            : mobileCards
+        }
+      </div>
+
+      <div class="table sessions-table" style="margin-top: 16px;">
         <div class="table-head">
           <div>Key</div>
           <div>Label</div>
