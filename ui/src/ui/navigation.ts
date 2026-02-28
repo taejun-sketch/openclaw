@@ -2,44 +2,62 @@ import { t } from "../i18n/index.ts";
 import type { IconName } from "./icons.js";
 
 export const TAB_GROUPS = [
-  { label: "chat", tabs: ["chat"] },
   {
-    label: "control",
-    tabs: ["overview", "channels", "instances", "sessions", "usage", "cron"],
+    label: "maketeam",
+    tabs: [
+      "home",
+      "teamboard",
+      "chat",
+      "runs",
+      "agents",
+      "automations",
+      "channels",
+      "skills",
+      "usage",
+    ],
   },
-  { label: "agent", tabs: ["agents", "skills", "nodes"] },
-  { label: "settings", tabs: ["config", "debug", "logs"] },
+  { label: "admin", tabs: ["config", "debug", "logs"] },
 ] as const;
 
 export type Tab =
-  | "agents"
-  | "overview"
-  | "channels"
-  | "instances"
-  | "sessions"
-  | "usage"
-  | "cron"
-  | "skills"
-  | "nodes"
+  | "home"
+  | "teamboard"
   | "chat"
+  | "runs"
+  | "agents"
+  | "automations"
+  | "channels"
+  | "skills"
+  | "usage"
   | "config"
   | "debug"
-  | "logs";
+  | "logs"
+  // Legacy tabs
+  | "overview"
+  | "instances"
+  | "sessions"
+  | "cron"
+  | "nodes";
 
 const TAB_PATHS: Record<Tab, string> = {
-  agents: "/agents",
-  overview: "/overview",
-  channels: "/channels",
-  instances: "/instances",
-  sessions: "/sessions",
-  usage: "/usage",
-  cron: "/cron",
-  skills: "/skills",
-  nodes: "/nodes",
+  home: "/home",
+  teamboard: "/teamboard",
   chat: "/chat",
+  runs: "/runs",
+  agents: "/agents",
+  automations: "/automations",
+  channels: "/channels",
+  skills: "/skills",
+  usage: "/usage",
   config: "/config",
   debug: "/debug",
   logs: "/logs",
+  // Legacy paths
+  overview: "/overview",
+  instances: "/instances",
+  sessions: "/sessions",
+  cron: "/cron",
+  nodes: "/nodes",
 };
 
 const PATH_TO_TAB = new Map(Object.entries(TAB_PATHS).map(([tab, path]) => [path, tab as Tab]));
@@ -96,7 +114,7 @@ export function tabFromPath(pathname: string, basePath = ""): Tab | null {
     normalized = "/";
   }
   if (normalized === "/") {
-    return "chat";
+    return "home";
   }
   return PATH_TO_TAB.get(normalized) ?? null;
 }
@@ -125,32 +143,40 @@ export function inferBasePathFromPathname(pathname: string): string {
 
 export function iconForTab(tab: Tab): IconName {
   switch (tab) {
-    case "agents":
-      return "folder";
+    case "home":
+      return "home";
+    case "teamboard":
+      return "grid";
     case "chat":
       return "messageSquare";
-    case "overview":
-      return "barChart";
+    case "runs":
+      return "play";
+    case "agents":
+      return "folder";
+    case "automations":
+      return "loader";
     case "channels":
       return "link";
-    case "instances":
-      return "radio";
-    case "sessions":
-      return "fileText";
-    case "usage":
-      return "barChart";
-    case "cron":
-      return "loader";
     case "skills":
       return "zap";
-    case "nodes":
-      return "monitor";
+    case "usage":
+      return "barChart";
     case "config":
       return "settings";
     case "debug":
       return "bug";
     case "logs":
       return "scrollText";
+    case "overview":
+      return "barChart";
+    case "instances":
+      return "radio";
+    case "sessions":
+      return "fileText";
+    case "cron":
+      return "loader";
+    case "nodes":
+      return "monitor";
     default:
       return "folder";
   }

@@ -236,8 +236,8 @@ export function renderApp(state: AppViewState) {
               <img src=${basePath ? `${basePath}/favicon.svg` : "/favicon.svg"} alt="OpenClaw" />
             </div>
             <div class="brand-text">
-              <div class="brand-title">OPENCLAW</div>
-              <div class="brand-sub">Gateway Dashboard</div>
+              <div class="brand-title">MAKETEAM</div>
+              <div class="brand-sub">AI Agents Team OS</div>
             </div>
           </div>
         </div>
@@ -326,6 +326,30 @@ export function renderApp(state: AppViewState) {
         </section>
 
         ${
+          state.tab === "home"
+            ? html`<div class="callout" style="margin-bottom:12px;">
+                <strong>Today Goals</strong>
+                <div style="margin-top:8px">1) Move top priority backlog items to To Do • 2) Run one automation • 3) Review usage.</div>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
+                <div class="callout"><strong>In Progress</strong><div style="margin-top:8px" class="mono">${sessionsCount ?? "n/a"} active/known runs</div></div>
+                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">Check Team Board dependencies</div></div>
+                <div class="callout"><strong>Automations</strong><div style="margin-top:8px" class="mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
+                <div class="callout"><strong>Usage Snapshot</strong><div style="margin-top:8px" class="mono">Open Usage tab for token/cost trend</div></div>
+              </div>
+              <div class="callout">
+                <strong>Quick Links</strong>
+                <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                  <a class="btn" href="${basePath || ""}/teamboard">Task</a>
+                  <a class="btn" href="${basePath || ""}/runs">Runs</a>
+                  <a class="btn" href="${basePath || ""}/automations">Automations</a>
+                  <a class="btn" href="${basePath || ""}/usage">Usage</a>
+                </div>
+              </div>`
+            : nothing
+        }
+
+        ${
           state.tab === "overview"
             ? renderOverview({
                 connected: state.connected,
@@ -355,6 +379,19 @@ export function renderApp(state: AppViewState) {
                 onConnect: () => state.connect(),
                 onRefresh: () => state.loadOverview(),
               })
+            : nothing
+        }
+
+        ${
+          state.tab === "teamboard"
+            ? html`<div class="callout">
+                <strong>Task</strong>
+                <div style="margin-top:8px">Open Agent Board for DAG task orchestration.</div>
+                <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Task</a>
+                  <span class="mono">http://127.0.0.1:3456</span>
+                </div>
+              </div>`
             : nothing
         }
 
@@ -410,7 +447,7 @@ export function renderApp(state: AppViewState) {
         }
 
         ${
-          state.tab === "sessions"
+          state.tab === "sessions" || state.tab === "runs"
             ? renderSessions({
                 loading: state.sessionsLoading,
                 result: state.sessionsResult,
@@ -436,7 +473,7 @@ export function renderApp(state: AppViewState) {
         ${renderUsageTab(state)}
 
         ${
-          state.tab === "cron"
+          state.tab === "cron" || state.tab === "automations"
             ? renderCron({
                 basePath: state.basePath,
                 loading: state.cronLoading,
