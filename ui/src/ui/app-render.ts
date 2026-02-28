@@ -310,28 +310,28 @@ export function renderApp(state: AppViewState) {
 
         ${
           state.tab === "home"
-            ? html`<div class="callout" style="margin-bottom:12px;">
+            ? html`<div class="callout home-card home-card--spaced">
                 <strong>Today Goals</strong>
-                <div style="margin-top:8px">1) Move top priority backlog items to To Do • 2) Run one automation • 3) Review usage.</div>
-                <div style="margin-top:10px" class="mono">
+                <div class="home-card__body">1) Move top priority backlog items to To Do • 2) Run one automation • 3) Review usage.</div>
+                <div class="home-card__meta mono">
                   Active session: ${state.sessionKey || "main"} · Connected: ${state.connected ? "yes" : "no"}
                 </div>
               </div>
-              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
-                <div class="callout"><strong>In Progress</strong><div style="margin-top:8px" class="mono">${sessionsCount ?? 0} sessions · chat queue ${state.chatQueue.length}</div></div>
-                <div class="callout"><strong>Blocked</strong><div style="margin-top:8px" class="mono">${state.lastError ? state.lastError : "No critical blocker detected"}</div></div>
-                <div class="callout"><strong>Automations</strong><div style="margin-top:8px" class="mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
-                <div class="callout"><strong>Usage Snapshot</strong><div style="margin-top:8px" class="mono">Range ${state.usageStartDate} → ${state.usageEndDate} · mode ${state.usageChartMode}</div></div>
+              <div class="home-grid">
+                <div class="callout home-card"><strong>In Progress</strong><div class="home-card__body mono">${sessionsCount ?? 0} sessions · chat queue ${state.chatQueue.length}</div></div>
+                <div class="callout home-card"><strong>Blocked</strong><div class="home-card__body mono">${state.lastError ? state.lastError : "No critical blocker detected"}</div></div>
+                <div class="callout home-card"><strong>Automations</strong><div class="home-card__body mono">${state.cronJobs.length} jobs · next ${cronNext ? new Date(cronNext).toLocaleString() : "n/a"}</div></div>
+                <div class="callout home-card"><strong>Usage Snapshot</strong><div class="home-card__body mono">Range ${state.usageStartDate} → ${state.usageEndDate} · mode ${state.usageChartMode}</div></div>
               </div>
-              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:12px;">
-                <div class="callout"><strong>Channels</strong><div style="margin-top:8px" class="mono">${state.channelsSnapshot ? Object.keys(state.channelsSnapshot.channels || {}).length : 0} configured</div></div>
-                <div class="callout"><strong>Agents</strong><div style="margin-top:8px" class="mono">${state.agentsList?.agents?.length ?? 0} available</div></div>
-                <div class="callout"><strong>Theme</strong><div style="margin-top:8px" class="mono">${state.theme} (${state.themeResolved})</div></div>
-                <div class="callout"><strong>Last Channels Refresh</strong><div style="margin-top:8px" class="mono">${state.channelsLastSuccess ? new Date(state.channelsLastSuccess).toLocaleString() : "n/a"}</div></div>
+              <div class="home-grid">
+                <div class="callout home-card"><strong>Channels</strong><div class="home-card__body mono">${state.channelsSnapshot ? Object.keys(state.channelsSnapshot.channels || {}).length : 0} configured</div></div>
+                <div class="callout home-card"><strong>Agents</strong><div class="home-card__body mono">${state.agentsList?.agents?.length ?? 0} available</div></div>
+                <div class="callout home-card"><strong>Theme</strong><div class="home-card__body mono">${state.theme} (${state.themeResolved})</div></div>
+                <div class="callout home-card"><strong>Last Channels Refresh</strong><div class="home-card__body mono">${state.channelsLastSuccess ? new Date(state.channelsLastSuccess).toLocaleString() : "n/a"}</div></div>
               </div>
               <div class="callout">
                 <strong>Quick Links</strong>
-                <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                <div class="home-quick-links">
                   <a class="btn" href="${basePath || ""}/teamboard">Task</a>
                   <a class="btn" href="${basePath || ""}/runs">Runs</a>
                   <a class="btn" href="${basePath || ""}/automations">Automations</a>
@@ -390,8 +390,8 @@ export function renderApp(state: AppViewState) {
           state.tab === "teamboard"
             ? html`<div class="callout">
                 <strong>Task</strong>
-                <div style="margin-top:8px">Open Agent Board for DAG task orchestration.</div>
-                <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <div class="home-card__body">Open Agent Board for DAG task orchestration.</div>
+                <div class="home-quick-links home-quick-links--inline">
                   <a class="btn" href="http://127.0.0.1:3456" target=${EXTERNAL_LINK_TARGET} rel=${buildExternalLinkRel()}>Open Task</a>
                   <span class="mono">http://127.0.0.1:3456</span>
                 </div>

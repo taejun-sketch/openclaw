@@ -2590,3 +2590,38 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* MakeTeam home/task board layout tokens */
+.home-card {
+  border-radius: 12px;
+}
+
+.home-card--spaced {
+  margin-bottom: 12px;
+}
+
+.home-card__body {
+  margin-top: 8px;
+}
+
+.home-card__meta {
+  margin-top: 10px;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.home-quick-links {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.home-quick-links--inline {
+  align-items: center;
+}
