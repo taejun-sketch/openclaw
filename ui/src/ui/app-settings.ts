@@ -62,9 +62,21 @@ type SettingsHost = {
 };
 
 export function applySettings(host: SettingsHost, next: UiSettings) {
+  const normalizedTabs = Array.from(
+    new Set(
+      [
+        ...(Array.isArray(next.chatTabs) ? next.chatTabs : []),
+        next.lastActiveSessionKey,
+        next.sessionKey,
+      ]
+        .map((value) => (typeof value === "string" ? value.trim() : ""))
+        .filter(Boolean),
+    ),
+  );
   const normalized = {
     ...next,
     lastActiveSessionKey: next.lastActiveSessionKey?.trim() || next.sessionKey.trim() || "main",
+    chatTabs: normalizedTabs.length ? normalizedTabs : ["main"],
   };
   host.settings = normalized;
   saveSettings(normalized);

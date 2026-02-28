@@ -47,6 +47,61 @@ function resetChatStateForSessionSwitch(state: AppViewState, sessionKey: string)
   });
 }
 
+function switchChatSession(state: AppViewState, next: string) {
+  const sessionKey = next.trim();
+  if (!sessionKey) {
+    return;
+  }
+  state.sessionKey = sessionKey;
+  state.chatMessage = "";
+  state.chatStream = null;
+  (state as unknown as OpenClawApp).chatStreamStartedAt = null;
+  state.chatRunId = null;
+  (state as unknown as OpenClawApp).resetToolStream();
+  (state as unknown as OpenClawApp).resetChatScroll();
+  const existingTabs = Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [];
+  const chatTabs = Array.from(new Set([...existingTabs, sessionKey]));
+  state.applySettings({
+    ...state.settings,
+    sessionKey,
+    lastActiveSessionKey: sessionKey,
+    chatTabs,
+  });
+  void state.loadAssistantIdentity();
+  syncUrlWithSessionKey(
+    state as unknown as Parameters<typeof syncUrlWithSessionKey>[0],
+    sessionKey,
+    true,
+  );
+  void loadChatHistory(state as unknown as ChatState);
+}
+
+function closeChatTab(state: AppViewState, sessionKey: string) {
+  const tabs = (
+    Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey]
+  ).filter(Boolean);
+  if (tabs.length <= 1) {
+    return;
+  }
+  const idx = tabs.indexOf(sessionKey);
+  if (idx < 0) {
+    return;
+  }
+  const nextTabs = tabs.filter((key) => key !== sessionKey);
+  let nextActive = state.sessionKey;
+  if (state.sessionKey === sessionKey) {
+    nextActive = nextTabs[Math.max(0, idx - 1)] ?? nextTabs[0] ?? "main";
+  }
+  state.applySettings({
+    ...state.settings,
+    chatTabs: nextTabs,
+    sessionKey: nextActive,
+    lastActiveSessionKey: nextActive,
+  });
+  if (state.sessionKey === sessionKey) {
+    switchChatSession(state, nextActive);
+  }
+}
 export function renderTab(state: AppViewState, tab: Tab) {
   const href = pathForTab(tab, state.basePath);
   return html`
@@ -129,31 +184,54 @@ export function renderChatControls(state: AppViewState) {
   `;
   return html`
     <div class="chat-controls">
+      <div class="chat-session-tabs" role="tablist" aria-label="Chat tabs">
+        ${(Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : [state.sessionKey])
+          .filter((value, index, arr) => value && arr.indexOf(value) === index)
+          .map(
+            (tabKey) => html`
+            <button
+              class="chat-session-tab ${tabKey === state.sessionKey ? "active" : ""}"
+              type="button"
+              role="tab"
+              aria-selected=${tabKey === state.sessionKey}
+              title=${tabKey}
+              @click=${() => switchChatSession(state, tabKey)}
+            >
+              <span class="chat-session-tab__label">${tabKey}</span>
+              ${
+                tabKey !== "main"
+                  ? html`<span class="chat-session-tab__close" @click=${(event: MouseEvent) => {
+                      event.stopPropagation();
+                      closeChatTab(state, tabKey);
+                    }}>${icons.x}</span>`
+                  : nothing
+              }
+            </button>
+          `,
+          )}
+        <button
+          class="btn btn--sm"
+          type="button"
+          title="Add chat tab"
+          @click=${() => {
+            const seed = state.sessionKey || "main";
+            const next = window.prompt("New session key", seed)?.trim();
+            if (!next) {
+              return;
+            }
+            switchChatSession(state, next);
+          }}
+        >
+          + Tab
+        </button>
+      </div>
       <label class="field chat-controls__session">
         <select
           .value=${state.sessionKey}
           ?disabled=${!state.connected}
           @change=${(e: Event) => {
             const next = (e.target as HTMLSelectElement).value;
-            state.sessionKey = next;
-            state.chatMessage = "";
-            state.chatStream = null;
-            (state as unknown as OpenClawApp).chatStreamStartedAt = null;
-            state.chatRunId = null;
-            (state as unknown as OpenClawApp).resetToolStream();
-            (state as unknown as OpenClawApp).resetChatScroll();
-            state.applySettings({
-              ...state.settings,
-              sessionKey: next,
-              lastActiveSessionKey: next,
-            });
-            void state.loadAssistantIdentity();
-            syncUrlWithSessionKey(
-              state as unknown as Parameters<typeof syncUrlWithSessionKey>[0],
-              next,
-              true,
-            );
-            void loadChatHistory(state as unknown as ChatState);
+            switchChatSession(state, next);
           }}
         >
           ${repeat(

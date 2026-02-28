@@ -8,6 +8,7 @@ export type UiSettings = {
   token: string;
   sessionKey: string;
   lastActiveSessionKey: string;
+  chatTabs: string[];
   theme: ThemeMode;
   chatFocusMode: boolean;
   chatShowThinking: boolean;
@@ -28,6 +29,7 @@ export function loadSettings(): UiSettings {
     token: "",
     sessionKey: "main",
     lastActiveSessionKey: "main",
+    chatTabs: ["main"],
     theme: "light",
     chatFocusMode: false,
     chatShowThinking: true,
@@ -57,6 +59,17 @@ export function loadSettings(): UiSettings {
           ? parsed.lastActiveSessionKey.trim()
           : (typeof parsed.sessionKey === "string" && parsed.sessionKey.trim()) ||
             defaults.lastActiveSessionKey,
+      chatTabs: Array.isArray(parsed.chatTabs)
+        ? parsed.chatTabs
+            .filter((value): value is string => typeof value === "string")
+            .map((value) => value.trim())
+            .filter(Boolean)
+        : [
+            (typeof parsed.lastActiveSessionKey === "string" &&
+              parsed.lastActiveSessionKey.trim()) ||
+              (typeof parsed.sessionKey === "string" && parsed.sessionKey.trim()) ||
+              defaults.lastActiveSessionKey,
+          ],
       theme:
         parsed.theme === "light" || parsed.theme === "dark" || parsed.theme === "system"
           ? parsed.theme

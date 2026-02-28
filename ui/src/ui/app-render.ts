@@ -366,13 +366,24 @@ export function renderApp(state: AppViewState) {
                 onSettingsChange: (next) => state.applySettings(next),
                 onPasswordChange: (next) => (state.password = next),
                 onSessionKeyChange: (next) => {
-                  state.sessionKey = next;
+                  const sessionKey = next.trim();
+                  if (!sessionKey) {
+                    return;
+                  }
+                  state.sessionKey = sessionKey;
                   state.chatMessage = "";
                   state.resetToolStream();
+                  const chatTabs = Array.from(
+                    new Set([
+                      ...(Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : []),
+                      sessionKey,
+                    ]),
+                  );
                   state.applySettings({
                     ...state.settings,
-                    sessionKey: next,
-                    lastActiveSessionKey: next,
+                    sessionKey,
+                    lastActiveSessionKey: sessionKey,
+                    chatTabs,
                   });
                   void state.loadAssistantIdentity();
                 },
@@ -1013,7 +1024,11 @@ export function renderApp(state: AppViewState) {
             ? renderChat({
                 sessionKey: state.sessionKey,
                 onSessionKeyChange: (next) => {
-                  state.sessionKey = next;
+                  const sessionKey = next.trim();
+                  if (!sessionKey) {
+                    return;
+                  }
+                  state.sessionKey = sessionKey;
                   state.chatMessage = "";
                   state.chatAttachments = [];
                   state.chatStream = null;
@@ -1022,10 +1037,17 @@ export function renderApp(state: AppViewState) {
                   state.chatQueue = [];
                   state.resetToolStream();
                   state.resetChatScroll();
+                  const chatTabs = Array.from(
+                    new Set([
+                      ...(Array.isArray(state.settings.chatTabs) ? state.settings.chatTabs : []),
+                      sessionKey,
+                    ]),
+                  );
                   state.applySettings({
                     ...state.settings,
-                    sessionKey: next,
-                    lastActiveSessionKey: next,
+                    sessionKey,
+                    lastActiveSessionKey: sessionKey,
+                    chatTabs,
                   });
                   void state.loadAssistantIdentity();
                   void loadChatHistory(state);

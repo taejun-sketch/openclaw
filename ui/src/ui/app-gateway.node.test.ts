@@ -73,6 +73,7 @@ function createHost() {
       token: "",
       sessionKey: "main",
       lastActiveSessionKey: "main",
+      chatTabs: ["main"],
       theme: "system",
       chatFocusMode: false,
       chatShowThinking: true,
