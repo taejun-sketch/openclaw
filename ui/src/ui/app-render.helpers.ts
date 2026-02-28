@@ -331,66 +331,99 @@ export function renderChatControls(state: AppViewState) {
           )}
         </select>
       </label>
-      <button
-        class="btn btn--sm btn--icon"
-        ?disabled=${state.chatLoading || !state.connected}
-        @click=${async () => {
-          const app = state as unknown as OpenClawApp;
-          app.chatManualRefreshInFlight = true;
-          app.chatNewMessagesBelow = false;
-          await app.updateComplete;
-          app.resetToolStream();
-          try {
+      <div class="chat-controls__actions chat-controls__actions--desktop">
+        <button
+          class="btn btn--sm btn--icon"
+          ?disabled=${state.chatLoading || !state.connected}
+          @click=${async () => {
+            const app = state as unknown as OpenClawApp;
+            app.chatManualRefreshInFlight = true;
+            app.chatNewMessagesBelow = false;
+            await app.updateComplete;
+            app.resetToolStream();
+            try {
+              await refreshChat(state as unknown as Parameters<typeof refreshChat>[0], {
+                scheduleScroll: false,
+              });
+              app.scrollToBottom({ smooth: true });
+            } finally {
+              requestAnimationFrame(() => {
+                app.chatManualRefreshInFlight = false;
+                app.chatNewMessagesBelow = false;
+              });
+            }
+          }}
+          title=${t("chat.refreshTitle")}
+        >
+          ${refreshIcon}
+        </button>
+        <span class="chat-controls__separator">|</span>
+        <button
+          class="btn btn--sm btn--icon ${showThinking ? "active" : ""}"
+          ?disabled=${disableThinkingToggle}
+          @click=${() => {
+            if (disableThinkingToggle) {
+              return;
+            }
+            state.applySettings({
+              ...state.settings,
+              chatShowThinking: !state.settings.chatShowThinking,
+            });
+          }}
+          aria-pressed=${showThinking}
+          title=${disableThinkingToggle ? t("chat.onboardingDisabled") : t("chat.thinkingToggle")}
+        >
+          ${icons.brain}
+        </button>
+        <button
+          class="btn btn--sm btn--icon ${focusActive ? "active" : ""}"
+          ?disabled=${disableFocusToggle}
+          @click=${() => {
+            if (disableFocusToggle) {
+              return;
+            }
+            state.applySettings({
+              ...state.settings,
+              chatFocusMode: !state.settings.chatFocusMode,
+            });
+          }}
+          aria-pressed=${focusActive}
+          title=${disableFocusToggle ? t("chat.onboardingDisabled") : t("chat.focusToggle")}
+        >
+          ${focusIcon}
+        </button>
+      </div>
+      <details class="chat-controls__more chat-controls__actions--mobile">
+        <summary class="btn btn--sm">⋯</summary>
+        <div class="chat-controls__more-menu">
+          <button class="btn btn--sm" type="button" ?disabled=${state.chatLoading || !state.connected} @click=${async () => {
+            const app = state as unknown as OpenClawApp;
+            app.chatManualRefreshInFlight = true;
             await refreshChat(state as unknown as Parameters<typeof refreshChat>[0], {
               scheduleScroll: false,
             });
-            app.scrollToBottom({ smooth: true });
-          } finally {
-            requestAnimationFrame(() => {
-              app.chatManualRefreshInFlight = false;
-              app.chatNewMessagesBelow = false;
+            app.chatManualRefreshInFlight = false;
+          }}>Refresh</button>
+          <button class="btn btn--sm" type="button" ?disabled=${disableThinkingToggle} @click=${() => {
+            if (disableThinkingToggle) {
+              return;
+            }
+            state.applySettings({
+              ...state.settings,
+              chatShowThinking: !state.settings.chatShowThinking,
             });
-          }
-        }}
-        title=${t("chat.refreshTitle")}
-      >
-        ${refreshIcon}
-      </button>
-      <span class="chat-controls__separator">|</span>
-      <button
-        class="btn btn--sm btn--icon ${showThinking ? "active" : ""}"
-        ?disabled=${disableThinkingToggle}
-        @click=${() => {
-          if (disableThinkingToggle) {
-            return;
-          }
-          state.applySettings({
-            ...state.settings,
-            chatShowThinking: !state.settings.chatShowThinking,
-          });
-        }}
-        aria-pressed=${showThinking}
-        title=${disableThinkingToggle ? t("chat.onboardingDisabled") : t("chat.thinkingToggle")}
-      >
-        ${icons.brain}
-      </button>
-      <button
-        class="btn btn--sm btn--icon ${focusActive ? "active" : ""}"
-        ?disabled=${disableFocusToggle}
-        @click=${() => {
-          if (disableFocusToggle) {
-            return;
-          }
-          state.applySettings({
-            ...state.settings,
-            chatFocusMode: !state.settings.chatFocusMode,
-          });
-        }}
-        aria-pressed=${focusActive}
-        title=${disableFocusToggle ? t("chat.onboardingDisabled") : t("chat.focusToggle")}
-      >
-        ${focusIcon}
-      </button>
+          }}>Thinking ${showThinking ? "ON" : "OFF"}</button>
+          <button class="btn btn--sm" type="button" ?disabled=${disableFocusToggle} @click=${() => {
+            if (disableFocusToggle) {
+              return;
+            }
+            state.applySettings({
+              ...state.settings,
+              chatFocusMode: !state.settings.chatFocusMode,
+            });
+          }}>Focus ${focusActive ? "ON" : "OFF"}</button>
+        </div>
+      </details>
     </div>
   `;
 }
